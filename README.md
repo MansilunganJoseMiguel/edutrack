@@ -50,3 +50,10 @@ System Integration: Android ActivityResultContracts Native Storage Access Framew
 
 🎯 Target Audience
 Designed for college and university students (such as Information Technology & Computer Technology majors) seeking a structured tool to manage complex assignment schedules, maintain accountability, and streamline project file uploads on the go.
+
+Group 1:
+Jose Miguel Mansilungan
+Irish Comawas
+Andrea Godinez
+Karen Abnay 
+Alyanna Fernando
