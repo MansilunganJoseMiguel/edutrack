@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="#F8F9FA">
+
+    <!-- Sidebar Navigation -->
+    <LinearLayout
+        android:layout_width="185dp"
+        android:layout_height="match_parent"
+        android:background="#1B2A4A"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- App Logo / Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="EduTrack"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <!-- Dashboard Header Button (Clickable) -->
+        <TextView
+            android:id="@+id/navDashboard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:background="#2E4057"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="12dp"
+            android:text="🏠  Dashboard ▾"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- Expandable / Collapsible Dashboard Submenu Container -->
+        <LinearLayout
+            android:id="@+id/layoutDashboardSubmenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical"
+            android:paddingStart="12dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/navActivities"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="10dp"
+                android:text="📝  Activities"
+                android:textColor="#A0AAB2"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/navQuizzes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="10dp"
+                android:text="❓  Quizzes"
+                android:textColor="#A0AAB2"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/navProjects"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="10dp"
+                android:text="📁  Projects"
+                android:textColor="#A0AAB2"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Subjects Navigation Item -->
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Logout Button -->
+        <TextView
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="12dp"
+            android:text="🚪  Logout"
+            android:textColor="#FF6B6B"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <!-- Main Content Area -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Top Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
+
+            <!-- Search Bar -->
+            <EditText
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="40dp"
+                android:background="@android:drawable/editbox_background_normal"
+                android:hint="🔍 Search subjects, lessons, or activities..."
+                android:paddingStart="12dp"
+                android:textSize="14sp"/>
+
+            <!-- User Profile Dropdown Header -->
+            <TextView
+                android:id="@+id/tvUserProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:paddingStart="16dp"
+                android:text="  👤 Student ▾"
+                android:textColor="#333333"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Dropdown Menu Layout -->
+        <LinearLayout
+            android:id="@+id/layoutProfileDropdown"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:orientation="vertical"
+            android:background="#FFFFFF"
+            android:elevation="4dp"
+            android:padding="12dp"
+            android:visibility="gone"
+            android:layout_marginTop="-16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/btnProfileDropdown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="8dp"
+                android:text="👤 View Profile"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="⚙️ Settings"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/btnDropdownLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="8dp"
+                android:text="🚪 Logout"
+                android:textColor="#FF6B6B"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Welcome Banner -->
+        <TextView
+            android:id="@+id/tvWelcomeHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Welcome Back!"
+            android:textColor="#1B2A4A"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Keep learning and reach your goals!"
+            android:textColor="#666666"
+            android:layout_marginBottom="24dp"/>
+
+        <!-- Subject Progress Cards Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"/>
+
+    </LinearLayout>
+</LinearLayout>
