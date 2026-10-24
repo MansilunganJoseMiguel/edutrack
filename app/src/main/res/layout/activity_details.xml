@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#F8F9FA">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <Button
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="← Back"/>
+
+            <TextView
+                android:id="@+id/tvSectionTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EduTrack"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#1B2A4A"
+                android:layout_marginStart="16dp"/>
+        </LinearLayout>
+
+        <!-- ========================================== -->
+        <!-- 1. PROFILE SECTION                         -->
+        <!-- ========================================== -->
+        <LinearLayout
+            android:id="@+id/layoutProfileContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:background="#FFFFFF"
+            android:padding="20dp"
+            android:elevation="2dp"
+            android:visibility="gone"
+            android:layout_marginBottom="12dp">
+
+            <ImageView
+                android:id="@+id/imgProfile"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:src="@android:drawable/ic_menu_gallery"
+                android:background="#E0E0E0"
+                android:contentDescription="Profile Picture"
+                android:layout_marginBottom="8dp"/>
+
+            <Button
+                android:id="@+id/btnChangeProfilePic"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="Change Picture"
+                android:textSize="12sp"
+                android:layout_marginBottom="12dp"/>
+
+            <TextView
+                android:id="@+id/tvProfileName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jose Miguel T. Mansilungan"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#1B2A4A"/>
+
+            <TextView
+                android:id="@+id/tvProfileEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="josemiguelmansilungan@gmail.com"
+                android:textColor="#666666"
+                android:textSize="14sp"
+                android:layout_marginBottom="12dp"/>
+
+            <TextView
+                android:id="@+id/tvProfileDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Role: Student\nCourse: ACT (Associate in Computer Technology)\nEnrolled Subjects: 5"
+                android:textSize="14sp"
+                android:lineSpacingExtra="4dp"
+                android:textColor="#333333"/>
+        </LinearLayout>
+
+        <!-- ========================================== -->
+        <!-- 2. CONTENT & SUBJECT FILTER SECTION        -->
+        <!-- ========================================== -->
+        <LinearLayout
+            android:id="@+id/layoutActivitiesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <!-- Subject Filter Buttons Bar -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginBottom="12dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnFilterAll"
+                        android:layout_width="wrap_content"
+                        android:layout_height="38dp"
+                        android:text="All"
+                        android:textSize="12sp"
+                        android:layout_marginEnd="6dp"/>
+
+                    <Button
+                        android:id="@+id/btnFilterDsa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="38dp"
+                        android:text="IS-DSA 213"
+                        android:textSize="12sp"
+                        android:backgroundTint="#E3F2FD"
+                        android:textColor="#0D47A1"
+                        android:layout_marginEnd="6dp"/>
+
+                    <Button
+                        android:id="@+id/btnFilterMad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="38dp"
+                        android:text="MAD 213"
+                        android:textSize="12sp"
+                        android:backgroundTint="#E8F5E9"
+                        android:textColor="#1B5E20"
+                        android:layout_marginEnd="6dp"/>
+
+                    <Button
+                        android:id="@+id/btnFilterWa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="38dp"
+                        android:text="CT-WA 213"
+                        android:textSize="12sp"
+                        android:backgroundTint="#FFF3E0"
+                        android:textColor="#E65100"
+                        android:layout_marginEnd="6dp"/>
+
+                    <Button
+                        android:id="@+id/btnFilterIm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="38dp"
+                        android:text="CC-IM 213"
+                        android:textSize="12sp"
+                        android:backgroundTint="#F3E5F5"
+                        android:textColor="#4A148C"
+                        android:layout_marginEnd="6dp"/>
+
+                    <Button
+                        android:id="@+id/btnFilterDcn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="38dp"
+                        android:text="IS-DCN 213"
+                        android:textSize="12sp"
+                        android:backgroundTint="#FFEBEE"
+                        android:textColor="#B71C1C"/>
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- Search Bar Input -->
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:hint="🔍 Search within selected subject..."
+                android:inputType="text"
+                android:padding="10dp"
+                android:textSize="14sp"
+                android:background="@android:drawable/editbox_background_normal"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Display List (Changed height to wrap_content so it sizes properly inside a ScrollView) -->
+            <TextView
+                android:id="@+id/tvContentList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="150dp"
+                android:textSize="15sp"
+                android:lineSpacingExtra="6dp"
+                android:padding="12dp"
+                android:background="#FFFFFF"
+                android:textColor="#333333"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Upload/Attach File Bar -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="4dp">
+
+                <TextView
+                    android:id="@+id/tvSelectedFile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No file attached yet."
+                    android:textColor="#666666"
+                    android:layout_marginBottom="6dp"/>
+
+                <Button
+                    android:id="@+id/btnUploadFile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="📎 Attach / Upload Submission File"
+                    android:backgroundTint="#1B2A4A"
+                    android:textColor="#FFFFFF"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
