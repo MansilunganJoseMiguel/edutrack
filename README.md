@@ -57,3 +57,7 @@ Irish Comawas
 Andrea Godinez
 Karen Abnay 
 Alyanna Fernando
+
+App Version: Version 1.0
+
+App Used to Create: Android Studio
