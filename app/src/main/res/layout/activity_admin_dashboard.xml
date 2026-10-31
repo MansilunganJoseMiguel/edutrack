@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8F9FA"
+    android:orientation="vertical">
+
+    <!-- Admin Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarAdmin"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#202124"
+        app:title="EduTrack — Admin Control Panel"
+        app:titleTextColor="@android:color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Welcome Header -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Administrator Dashboard"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#202124"
+                android:layout_marginBottom="16dp" />
+
+            <!-- System Statistics Cards Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="System Overview"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#5F6368"
+                android:layout_marginBottom="12dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="24dp">
+
+                <!-- Total Students Stat Card -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Total Students"
+                            android:textSize="13sp"
+                            android:textColor="#5F6368"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Total Teachers Stat Card -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="100dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="2dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Total Teachers"
+                            android:textSize="13sp"
+                            android:textColor="#5F6368"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <!-- Quick Management Actions -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Quick Actions &amp; Controls"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#5F6368"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Manage User Accounts & Submissions Button -->
+            <Button
+                android:id="@+id/btnManageUsers"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:backgroundTint="#202124"
+                android:text="Manage User Accounts &amp; Submissions"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:cornerRadius="8dp"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Manage System Sections & Courses Button -->
+            <Button
+                android:id="@+id/btnManageCourses"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:backgroundTint="@android:color/white"
+                android:text="Create &amp; Manage Sections"
+                android:textColor="#202124"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                style="?attr/materialButtonOutlinedStyle"
+                app:strokeColor="#202124"
+                app:cornerRadius="8dp"
+                android:layout_marginBottom="12dp" />
+
+            <!-- View System Activity Logs Button -->
+            <Button
+                android:id="@+id/btnSystemLogs"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:backgroundTint="@android:color/white"
+                android:text="View System Activity Logs"
+                android:textColor="#5F6368"
+                android:textSize="14sp"
+                style="?attr/materialButtonOutlinedStyle"
+                app:strokeColor="#DADCE0"
+                app:cornerRadius="8dp"
+                android:layout_marginBottom="28dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#DADCE0"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Red Log Out Button -->
+            <Button
+                android:id="@+id/btnLogoutAdmin"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:backgroundTint="#C5221F"
+                android:text="Log Out"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:cornerRadius="8dp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

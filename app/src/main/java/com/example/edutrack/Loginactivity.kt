@@ -21,26 +21,78 @@ class LoginActivity : AppCompatActivity() {
         val tvCreateAccount = findViewById<TextView>(R.id.tvCreateAccount)
 
         btnLogin.setOnClickListener {
-            val email = etEmail.text.toString().trim()
+            val inputEmailOrUser = etEmail.text.toString().trim()
             val password = etPassword.text.toString().trim()
 
-            // Retrieve dynamically stored user profile
+            if (inputEmailOrUser.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val sharedPref = getSharedPreferences("EduTrackUserPrefs", Context.MODE_PRIVATE)
+
+            // 1. Check for Admin Credentials (Hardcoded)
+            if (inputEmailOrUser.equals("admin", ignoreCase = true) && password == "admin123") {
+                sharedPref.edit().apply {
+                    putBoolean("IS_LOGGED_IN", true)
+                    putString("USER_ROLE", "admin")
+                    apply()
+                }
+                Toast.makeText(this, "Welcome Admin!", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, AdminDashboardActivity::class.java))
+                finish()
+                return@setOnClickListener
+            }
+
+            // 2. Check for Teacher Credentials (Must end with @deped.ph)
+            if (inputEmailOrUser.endsWith("@deped.ph", ignoreCase = true)) {
+                sharedPref.edit().apply {
+                    putBoolean("IS_LOGGED_IN", true)
+                    putString("USER_ROLE", "teacher")
+                    putString("USER_EMAIL", inputEmailOrUser)
+                    apply()
+                }
+                Toast.makeText(this, "Welcome Teacher!", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, TeacherDashboardActivity::class.java))
+                finish()
+                return@setOnClickListener
+            }
+
+            // 3. Check for Student Credentials (Registered dynamic users)
             val savedEmail = sharedPref.getString("USER_EMAIL", "")
             val savedPassword = sharedPref.getString("USER_PASSWORD", "")
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
-            } else if (email == savedEmail && password == savedPassword) {
-                // Save active login state
-                sharedPref.edit().putBoolean("IS_LOGGED_IN", true).apply()
+            val indexedPassword = sharedPref.getString("pass_$inputEmailOrUser", null)
+            val indexedName = sharedPref.getString("name_$inputEmailOrUser", null)
 
-                Toast.makeText(this, "Welcome Back!", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, DashboardActivity::class.java)
-                startActivity(intent)
+            val isIndexedMatch = indexedPassword != null && indexedPassword == password
+            val isGlobalMatch = (inputEmailOrUser.equals(savedEmail, ignoreCase = true) ||
+                    inputEmailOrUser.equals(sharedPref.getString("USER_FULL_NAME", ""), ignoreCase = true))
+                    && password == savedPassword
+
+            if (isIndexedMatch || isGlobalMatch) {
+                // Force active role to "student" upon successful student authentication
+                sharedPref.edit().apply {
+                    putBoolean("IS_LOGGED_IN", true)
+                    putString("USER_ROLE", "student")
+
+                    if (isIndexedMatch) {
+                        putString("USER_EMAIL", inputEmailOrUser)
+                        putString("USER_PASSWORD", password)
+                        if (indexedName != null) {
+                            putString("USER_FULL_NAME", indexedName)
+                            putString("USER_NAME", indexedName)
+                        }
+                        putString("USER_SECTION", sharedPref.getString("section_$inputEmailOrUser", "General Section"))
+                    }
+                    apply()
+                }
+
+                Toast.makeText(this, "Welcome Student!", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, DashboardActivity::class.java))
                 finish()
             } else {
-                Toast.makeText(this, "Invalid email or password!", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Invalid email, username, or password!", Toast.LENGTH_LONG).show()
                 etPassword.error = "Incorrect credentials"
             }
         }

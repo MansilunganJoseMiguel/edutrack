@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.edutrack">
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -33,6 +35,36 @@
         <!-- 4. Detail Activity -->
         <activity
             android:name=".DetailActivity"
+            android:exported="false" />
+
+        <!-- 5. Profile Activity -->
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+
+        <!-- 6. Teacher Dashboard Activity -->
+        <activity
+            android:name=".TeacherDashboardActivity"
+            android:exported="false" />
+
+        <!-- 7. Admin Dashboard Activity -->
+        <activity
+            android:name=".AdminDashboardActivity"
+            android:exported="false" />
+
+        <!-- 8. Admin Management Activity -->
+        <activity
+            android:name=".AdminManagementActivity"
+            android:exported="false" />
+
+        <!-- 9. Create Content Activity -->
+        <activity
+            android:name=".CreateContentActivity"
+            android:exported="false" />
+
+        <!-- Notification Receiver -->
+        <receiver
+            android:name=".DueNotificationReceiver"
             android:exported="false" />
 
     </application>

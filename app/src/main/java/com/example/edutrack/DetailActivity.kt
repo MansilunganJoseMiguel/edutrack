@@ -5,230 +5,102 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-
-// Data model for categorized items
-data class TrackItem(
-    val title: String,
-    val subject: String, // "IS-DSA 213", "MAD 213", "CT-WA 213", "CC-IM 213", "IS-DCN 213"
-    val category: String, // "ACTIVITIES", "QUIZZES", or "PROJECTS"
-    val status: String // "Submitted", "Pending", etc.
-)
+import androidx.appcompat.widget.Toolbar
 
 class DetailActivity : AppCompatActivity() {
 
-    private lateinit var layoutProfileContainer: LinearLayout
-    private lateinit var layoutActivitiesContainer: LinearLayout
-    private lateinit var imgProfile: ImageView
-    private lateinit var tvSelectedFile: TextView
-    private lateinit var tvContentList: TextView
-    private lateinit var etSearch: EditText
+    private lateinit var layoutAttachedFiles: LinearLayout
+    private lateinit var btnAddFile: Button
+    private lateinit var btnSubmitWork: Button
+    private lateinit var textSubmissionStatus: TextView
 
-    private var currentSubjectFilter = "ALL"
-    private var currentCategory = "ACTIVITIES"
-
-    // Updated master item list with your new subject codes
-    private val masterItemList = listOf(
-        // Activities
-        TrackItem("Binary Search Tree Assignment", "IS-DSA 213", "ACTIVITIES", "Submitted"),
-        TrackItem("Graph Algorithms Problem Set", "IS-DSA 213", "ACTIVITIES", "Pending - Due Today"),
-        TrackItem("Mobile Layout Design Exercise", "MAD 213", "ACTIVITIES", "Submitted"),
-        TrackItem("Event Handling Lab Activity", "MAD 213", "ACTIVITIES", "Pending - Due Tomorrow"),
-        TrackItem("Responsive Web Template", "CT-WA 213", "ACTIVITIES", "Submitted"),
-        TrackItem("JavaScript Form Validation", "CT-WA 213", "ACTIVITIES", "Pending - Due Friday"),
-        TrackItem("ERD Normalization Activity", "CC-IM 213", "ACTIVITIES", "Submitted"),
-        TrackItem("SQL Joins & Subqueries Lab", "CC-IM 213", "ACTIVITIES", "Pending - Due Next Week"),
-        TrackItem("IP Addressing & Subnetting Sheet", "IS-DCN 213", "ACTIVITIES", "Submitted"),
-        TrackItem("Packet Tracer Configuration", "IS-DCN 213", "ACTIVITIES", "Pending - Due Thursday"),
-
-        // Quizzes
-        TrackItem("Sorting & Searching Quiz", "IS-DSA 213", "QUIZZES", "Completed - Score: 92%"),
-        TrackItem("Android Lifecycle Pop Quiz", "MAD 213", "QUIZZES", "Completed - Score: 88%"),
-        TrackItem("CSS Flexbox & Grid Quiz", "CT-WA 213", "QUIZZES", "Upcoming"),
-        TrackItem("Relational Algebra Quiz", "CC-IM 213", "QUIZZES", "Completed - Score: 95%"),
-        TrackItem("OSI & TCP/IP Model Quiz", "IS-DCN 213", "QUIZZES", "Upcoming"),
-
-        // Projects
-        TrackItem("Data Structures Benchmark Project", "IS-DSA 213", "PROJECTS", "In Progress"),
-        TrackItem("EduTrack Mobile Application", "MAD 213", "PROJECTS", "In Progress"),
-        TrackItem("Full-Stack Student Portal Website", "CT-WA 213", "PROJECTS", "In Progress"),
-        TrackItem("Database System Implementation", "CC-IM 213", "PROJECTS", "Submitted"),
-        TrackItem("Network Topology Simulation", "IS-DCN 213", "PROJECTS", "In Progress")
-    )
-
-    // File launcher for uploading submissions
-    private val selectFileLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK && result.data != null) {
-            val fileUri: Uri? = result.data?.data
-            if (fileUri != null) {
-                val fileName = fileUri.path?.substringAfterLast('/') ?: "File Attached"
-                tvSelectedFile.text = "Attached: $fileName"
-                Toast.makeText(this, "File attached successfully!", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    // Profile picture picker launcher
-    private val selectProfilePicLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK && result.data != null) {
-            val imageUri: Uri? = result.data?.data
-            if (imageUri != null) {
-                imgProfile.setImageURI(imageUri)
-                Toast.makeText(this, "Profile picture updated!", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
+    private val PICK_FILE_REQUEST_CODE = 101
+    private var attachedFileUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_details)
 
-        val btnBack = findViewById<Button>(R.id.btnBack)
-        val tvSectionTitle = findViewById<TextView>(R.id.tvSectionTitle)
-        val btnUploadFile = findViewById<Button>(R.id.btnUploadFile)
-        val btnChangeProfilePic = findViewById<Button>(R.id.btnChangeProfilePic)
+        val toolbar = findViewById<Toolbar>(R.id.toolbarStudentDetail)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        toolbar.setNavigationOnClickListener { finish() }
 
-        // Subject Filter Buttons
-        val btnFilterAll = findViewById<Button>(R.id.btnFilterAll)
-        val btnFilterDsa = findViewById<Button>(R.id.btnFilterDsa)
-        val btnFilterMad = findViewById<Button>(R.id.btnFilterMad)
-        val btnFilterWa = findViewById<Button>(R.id.btnFilterWa)
-        val btnFilterIm = findViewById<Button>(R.id.btnFilterIm)
-        val btnFilterDcn = findViewById<Button>(R.id.btnFilterDcn)
+        val textDetailType = findViewById<TextView>(R.id.textDetailType)
+        val textDetailTitle = findViewById<TextView>(R.id.textDetailTitle)
+        val textDetailDue = findViewById<TextView>(R.id.textDetailDue)
+        val textDetailDescription = findViewById<TextView>(R.id.textDetailDescription)
 
-        layoutProfileContainer = findViewById(R.id.layoutProfileContainer)
-        layoutActivitiesContainer = findViewById(R.id.layoutActivitiesContainer)
-        imgProfile = findViewById(R.id.imgProfile)
-        tvSelectedFile = findViewById(R.id.tvSelectedFile)
-        tvContentList = findViewById(R.id.tvContentList)
-        etSearch = findViewById(R.id.etSearch)
+        layoutAttachedFiles = findViewById(R.id.layoutAttachedFiles)
+        btnAddFile = findViewById(R.id.btnAddFile)
+        btnSubmitWork = findViewById(R.id.btnSubmitWork)
+        textSubmissionStatus = findViewById(R.id.textSubmissionStatus)
 
-        val sharedPref = getSharedPreferences("EduTrackUserPrefs", Context.MODE_PRIVATE)
-        val dynamicName = sharedPref.getString("USER_FULL_NAME", "Jose Miguel T. Mansilungan")
-        val dynamicEmail = sharedPref.getString("USER_EMAIL", "jose.mansilungan@edutrack.edu")
+        // Get which type of item was clicked from the Dashboard intent
+        val contentType = intent.getStringExtra("CONTENT_TYPE") ?: "Lesson"
 
-        val tvProfileName = findViewById<TextView>(R.id.tvProfileName)
-        val tvProfileEmail = findViewById<TextView>(R.id.tvProfileEmail)
-        val tvProfileDetails = findViewById<TextView>(R.id.tvProfileDetails)
+        // Fetch saved teacher content from SharedPreferences
+        val prefs = getSharedPreferences("EduTrackContentPrefs", Context.MODE_PRIVATE)
+        val title = prefs.getString("${contentType}_title", "Untitled Content")
+        val desc = prefs.getString("${contentType}_desc", "No instructions provided.")
+        val due = prefs.getString("${contentType}_due", "No Due Date")
 
-        btnBack.setOnClickListener { finish() }
+        // Populate UI with teacher's uploaded data
+        textDetailType.text = "📌 $contentType"
+        textDetailTitle.text = title
+        textDetailDue.text = "📅 Due: $due"
+        textDetailDescription.text = if (desc.isNullOrEmpty()) "No instructions provided." else desc
 
-        // Set User Profile Details
-        tvProfileName?.text = dynamicName
-        tvProfileEmail?.text = dynamicEmail
-        tvProfileDetails?.text = """
-            Role: Student
-            Course: BS Information Technology
-            Enrolled Subjects: 5 (IS-DSA 213, MAD 213, CT-WA 213, CC-IM 213, IS-DCN 213)
-            Completed Activities: 20
-        """.trimIndent()
-
-        // Determine what category was tapped (PROFILE, ACTIVITIES, QUIZZES, or PROJECTS)
-        val sectionType = intent.getStringExtra("SECTION_TYPE") ?: "ACTIVITIES"
-        currentCategory = sectionType.uppercase()
-
-        if (currentCategory == "PROFILE") {
-            tvSectionTitle.text = "👤 User Profile"
-            layoutProfileContainer.visibility = View.VISIBLE
-            layoutActivitiesContainer.visibility = View.GONE
-        } else {
-            tvSectionTitle.text = when(currentCategory) {
-                "QUIZZES" -> "❓ Quizzes Tracker"
-                "PROJECTS" -> "📁 Projects Tracker"
-                else -> "📝 Activities Tracker"
-            }
-            layoutProfileContainer.visibility = View.GONE
-            layoutActivitiesContainer.visibility = View.VISIBLE
-
-            filterAndRenderItems()
-        }
-
-        // Subject Filter Button Listeners
-        btnFilterAll?.setOnClickListener {
-            currentSubjectFilter = "ALL"
-            filterAndRenderItems()
-        }
-        btnFilterDsa?.setOnClickListener {
-            currentSubjectFilter = "IS-DSA 213"
-            filterAndRenderItems()
-        }
-        btnFilterMad?.setOnClickListener {
-            currentSubjectFilter = "MAD 213"
-            filterAndRenderItems()
-        }
-        btnFilterWa?.setOnClickListener {
-            currentSubjectFilter = "CT-WA 213"
-            filterAndRenderItems()
-        }
-        btnFilterIm?.setOnClickListener {
-            currentSubjectFilter = "CC-IM 213"
-            filterAndRenderItems()
-        }
-        btnFilterDcn?.setOnClickListener {
-            currentSubjectFilter = "IS-DCN 213"
-            filterAndRenderItems()
-        }
-
-        // Search text watcher
-        etSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                filterAndRenderItems()
-            }
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
-        // File pickers
-        btnUploadFile.setOnClickListener {
+        // Handle clicking "+ Add or create file" to open phone file manager
+        btnAddFile.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-                type = "*/*"
-                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "*/*" // Allows choosing PDFs, images, docs, etc.
+                putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("application/pdf", "image/*", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
             }
-            selectFileLauncher.launch(Intent.createChooser(intent, "Select File to Upload"))
+            startActivityForResult(Intent.createChooser(intent, "Select File to Attach"), PICK_FILE_REQUEST_CODE)
         }
 
-        btnChangeProfilePic.setOnClickListener {
-            val intent = Intent(Intent.ACTION_GET_CONTENT).apply {
-                type = "image/*"
-                addCategory(Intent.CATEGORY_OPENABLE)
+        // Handle clicking "Turn In"
+        btnSubmitWork.setOnClickListener {
+            if (attachedFileUri != null) {
+                textSubmissionStatus.text = "Turned In"
+                textSubmissionStatus.setTextColor(resources.getColor(android.R.color.holo_green_dark))
+                btnSubmitWork.isEnabled = false
+                btnSubmitWork.text = "Submitted"
+                btnAddFile.isEnabled = false
+                Toast.makeText(this, "Assignment submitted successfully!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Please attach a file before turning in.", Toast.LENGTH_SHORT).show()
             }
-            selectProfilePicLauncher.launch(Intent.createChooser(intent, "Select Profile Image"))
         }
     }
 
-    private fun filterAndRenderItems() {
-        val query = etSearch.text.toString().trim().lowercase()
+    // Capture the selected file from phone storage
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            data?.data?.let { uri ->
+                attachedFileUri = uri
+                layoutAttachedFiles.visibility = View.VISIBLE
+                layoutAttachedFiles.removeAllViews()
 
-        // Filter by Category -> Subject -> Search Query
-        val filteredList = masterItemList.filter { item ->
-            val matchCategory = (item.category == currentCategory || currentCategory == "SUBJECTS")
-            val matchSubject = (currentSubjectFilter == "ALL" || item.subject.equals(currentSubjectFilter, ignoreCase = true))
-            val matchSearch = item.title.lowercase().contains(query) || item.status.lowercase().contains(query)
+                // Display the selected file name dynamically
+                val fileTextView = TextView(this).apply {
+                    text = "📄 ${uri.lastPathSegment ?: "Attached_File.pdf"}"
+                    textSize = 14f
+                    setTextColor(resources.getColor(android.R.color.darker_gray))
+                    setPadding(8, 8, 8, 8)
+                }
+                layoutAttachedFiles.addView(fileTextView)
 
-            matchCategory && matchSubject && matchSearch
-        }
-
-        if (filteredList.isEmpty()) {
-            tvContentList.text = "No items found for the selected subject."
-        } else {
-            val formattedItems = filteredList.map { item ->
-                "📌 [${item.subject}] ${item.title}\n   Status: ${item.status}"
+                Toast.makeText(this, "File attached successfully!", Toast.LENGTH_SHORT).show()
             }
-            tvContentList.text = formattedItems.joinToString("\n\n")
         }
     }
 }

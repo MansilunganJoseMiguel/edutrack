@@ -2,6 +2,7 @@ package com.example.edutrack
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
@@ -9,24 +10,31 @@ import android.view.animation.Transformation
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 
 class DashboardActivity : AppCompatActivity() {
+
+    private var layoutStudentFeed: LinearLayout? = null
+    private var textDashboardStudentName: TextView? = null
+    private var textDashboardStudentSection: TextView? = null
+    private var textWelcomeBanner: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         // 1. SharedPreferences Profile & Header Setup
-        val sharedPref = getSharedPreferences("EduTrackUserPrefs", Context.MODE_PRIVATE)
-        val dynamicName = sharedPref.getString("USER_FULL_NAME", "Jose Miguel Mansilungan")
+        textDashboardStudentName = findViewById(R.id.textDashboardStudentName)
+        textDashboardStudentSection = findViewById(R.id.textDashboardStudentSection)
+        textWelcomeBanner = findViewById(R.id.textWelcomeBanner)
 
-        val tvWelcomeHeader = findViewById<TextView>(R.id.tvWelcomeHeader)
-        val tvUserProfileDropdown = findViewById<TextView>(R.id.tvUserProfile)
-
-        // Dynamically update UI headers with user's name
-        tvWelcomeHeader?.text = "Welcome back,\n$dynamicName!"
-        tvUserProfileDropdown?.text = "  👤 $dynamicName ▾"
+        val layoutDashboardProfile = findViewById<View>(R.id.layoutDashboardProfile)
+        val profileDropdownMenu = findViewById<LinearLayout>(R.id.layoutProfileDropdown)
+        val btnProfileDropdown = findViewById<TextView>(R.id.btnProfileDropdown)
+        val btnSettingsDropdown = findViewById<TextView>(R.id.btnSettingsDropdown)
+        val btnDropdownLogout = findViewById<TextView>(R.id.btnDropdownLogout)
 
         // 2. Navigation & Sidebar Element References
         val navDashboard = findViewById<TextView>(R.id.navDashboard)
@@ -35,12 +43,9 @@ class DashboardActivity : AppCompatActivity() {
         val navActivities = findViewById<TextView>(R.id.navActivities)
         val navQuizzes = findViewById<TextView>(R.id.navQuizzes)
         val navProjects = findViewById<TextView>(R.id.navProjects)
-
-        val userProfileHeader = findViewById<TextView>(R.id.tvUserProfile)
-        val profileDropdownMenu = findViewById<LinearLayout>(R.id.layoutProfileDropdown)
-        val btnProfileDropdown = findViewById<TextView>(R.id.btnProfileDropdown)
-        val btnDropdownLogout = findViewById<TextView>(R.id.btnDropdownLogout)
         val btnLogoutSidebar = findViewById<TextView>(R.id.btnLogout)
+
+        layoutStudentFeed = findViewById(R.id.layoutStudentFeed)
 
         // Helper function to open DetailActivity with a specific section type
         fun openDetailScreen(sectionType: String) {
@@ -68,18 +73,25 @@ class DashboardActivity : AppCompatActivity() {
         navProjects?.setOnClickListener { openDetailScreen("PROJECTS") }
 
         // 5. Top Profile Header Click Event (Toggle Dropdown Menu)
-        userProfileHeader?.setOnClickListener {
+        layoutDashboardProfile?.setOnClickListener {
             if (profileDropdownMenu != null) {
                 profileDropdownMenu.isVisible = !profileDropdownMenu.isVisible
             } else {
-                openDetailScreen("PROFILE")
+                val intent = Intent(this, ProfileActivity::class.java)
+                startActivity(intent)
             }
         }
 
-        // Dropdown Profile Item Click
+        // Dropdown Profile Items Click
         btnProfileDropdown?.setOnClickListener {
             profileDropdownMenu?.visibility = View.GONE
-            openDetailScreen("PROFILE")
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
+
+        btnSettingsDropdown?.setOnClickListener {
+            profileDropdownMenu?.visibility = View.GONE
+            openDetailScreen("SETTINGS")
         }
 
         // 6. Logout Handling (Clears history and returns to LoginActivity)
@@ -91,6 +103,129 @@ class DashboardActivity : AppCompatActivity() {
 
         btnLogoutSidebar?.setOnClickListener { performLogout() }
         btnDropdownLogout?.setOnClickListener { performLogout() }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Refresh profile headers & feed every time student opens or returns to dashboard
+        loadDashboardProfileInfo()
+        loadTeacherPublishedContent()
+    }
+
+    private fun loadDashboardProfileInfo() {
+        val sharedPref = getSharedPreferences("EduTrackUserPrefs", Context.MODE_PRIVATE)
+        val fullName = sharedPref.getString("USER_FULL_NAME", null)
+            ?: sharedPref.getString("USER_NAME", "Student") ?: "Student"
+        val studentSection = sharedPref.getString("USER_SECTION", "General Section") ?: "General Section"
+
+        // Update dashboard top profile bar
+        textDashboardStudentName?.text = "$fullName ▾"
+        textDashboardStudentSection?.text = "🏫 $studentSection"
+
+        // Update welcome banner greeting
+        val firstName = fullName.split(" ").firstOrNull() ?: fullName
+        textWelcomeBanner?.text = "Welcome back,\n$firstName!"
+    }
+
+    private fun loadTeacherPublishedContent() {
+        val feedLayout = layoutStudentFeed ?: return
+        feedLayout.removeAllViews()
+
+        val prefs = getSharedPreferences("EduTrackContentPrefs", Context.MODE_PRIVATE)
+
+        // Categories published by teachers
+        val contentTypes = listOf("Subject / Course", "Lesson", "Quiz", "Project")
+
+        var hasContent = false
+
+        for (type in contentTypes) {
+            val title = prefs.getString("${type}_title", null)
+            val desc = prefs.getString("${type}_desc", null)
+            val due = prefs.getString("${type}_due", "No Due Date")
+
+            if (!title.isNullOrEmpty()) {
+                hasContent = true
+                addPostCardToFeed(type, title, desc ?: "", due ?: "No Due Date")
+            }
+        }
+
+        // Optional: Show an empty state message if no teacher content exists yet
+        if (!hasContent) {
+            val emptyView = TextView(this).apply {
+                text = "No active lessons or activities posted yet."
+                textSize = 14f
+                setTextColor(ContextCompat.getColor(this@DashboardActivity, android.R.color.darker_gray))
+                setPadding(16, 16, 16, 16)
+            }
+            feedLayout.addView(emptyView)
+        }
+    }
+
+    private fun addPostCardToFeed(type: String, title: String, description: String, dueDate: String) {
+        val feedLayout = layoutStudentFeed ?: return
+
+        // Create a Google Classroom-style CardView programmatically for the student feed
+        val cardView = CardView(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 0, 0, 16)
+            }
+            radius = 12f
+            cardElevation = 2f
+            setOnClickListener {
+                val intent = Intent(this@DashboardActivity, DetailActivity::class.java)
+                intent.putExtra("CONTENT_TYPE", type)
+                startActivity(intent)
+            }
+        }
+
+        val innerLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(16, 16, 16, 16)
+        }
+
+        // Badge showing content type (e.g., [Quiz] or [Lesson])
+        val badgeView = TextView(this).apply {
+            text = "📌 New $type"
+            textSize = 12f
+            setTypeface(typeface, Typeface.BOLD)
+            setTextColor(ContextCompat.getColor(this@DashboardActivity, android.R.color.holo_blue_dark))
+        }
+
+        // Title View
+        val titleView = TextView(this).apply {
+            text = title
+            textSize = 18f
+            setTypeface(typeface, Typeface.BOLD)
+            setTextColor(ContextCompat.getColor(this@DashboardActivity, android.R.color.black))
+            setPadding(0, 4, 0, 4)
+        }
+
+        // Description View
+        val descView = TextView(this).apply {
+            text = description
+            textSize = 14f
+            setTextColor(ContextCompat.getColor(this@DashboardActivity, android.R.color.darker_gray))
+        }
+
+        // Due Date View
+        val dueView = TextView(this).apply {
+            text = "📅 Due: $dueDate"
+            textSize = 12f
+            setTypeface(typeface, Typeface.ITALIC)
+            setTextColor(ContextCompat.getColor(this@DashboardActivity, android.R.color.holo_red_dark))
+            setPadding(0, 8, 0, 0)
+        }
+
+        innerLayout.addView(badgeView)
+        innerLayout.addView(titleView)
+        if (description.isNotEmpty()) innerLayout.addView(descView)
+        innerLayout.addView(dueView)
+
+        cardView.addView(innerLayout)
+        feedLayout.addView(cardView)
     }
 
     // ===============================================

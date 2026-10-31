@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:background="#F8F9FA">
+    android:background="#F8F9FA"
+    android:orientation="horizontal">
 
-    <!-- Sidebar Navigation -->
+    <!-- ================= SIDEBAR NAVIGATION ================= -->
     <LinearLayout
         android:layout_width="185dp"
         android:layout_height="match_parent"
@@ -23,7 +25,7 @@
             android:textSize="22sp"
             android:textStyle="bold" />
 
-        <!-- Dashboard Header Button (Clickable) -->
+        <!-- Dashboard Header Button (Clickable Toggle) -->
         <TextView
             android:id="@+id/navDashboard"
             android:layout_width="match_parent"
@@ -82,14 +84,12 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <!-- Subjects Navigation Item -->
-
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <!-- Logout Button -->
+        <!-- Sidebar Logout Button -->
         <TextView
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
@@ -102,111 +102,193 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <!-- Main Content Area -->
-    <LinearLayout
+    <!-- ================= MAIN CONTENT AREA ================= -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_height="match_parent">
 
-        <!-- Top Bar -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="24dp">
+            android:orientation="vertical"
+            android:padding="24dp">
 
-            <!-- Search Bar -->
-            <EditText
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="40dp"
-                android:background="@android:drawable/editbox_background_normal"
-                android:hint="🔍 Search subjects, lessons, or activities..."
-                android:paddingStart="12dp"
-                android:textSize="14sp"/>
+            <!-- TOP BAR (Search & Profile Dropdown Header) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="24dp"
+                android:orientation="horizontal">
 
-            <!-- User Profile Dropdown Header -->
+                <!-- Search Bar -->
+                <EditText
+                    android:id="@+id/etSearch"
+                    android:layout_width="0dp"
+                    android:layout_height="44dp"
+                    android:layout_weight="1"
+                    android:background="@android:drawable/editbox_background_normal"
+                    android:hint="🔍 Search subjects, lessons, or activities..."
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:textSize="14sp" />
+
+                <!-- User Profile Header Button (Avatar + Name + Section) -->
+                <LinearLayout
+                    android:id="@+id/layoutDashboardProfile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="4dp">
+
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:contentDescription="Profile Picture"
+                        android:src="@android:drawable/ic_menu_myplaces"
+                        app:tint="#1967D2" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textDashboardStudentName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Student Name ▾"
+                            android:textColor="#202124"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textDashboardStudentSection"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Section A"
+                            android:textColor="#5F6368"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- DROPDOWN MENU (Profile, Settings, Logout) -->
+            <LinearLayout
+                android:id="@+id/layoutProfileDropdown"
+                android:layout_width="220dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginTop="-16dp"
+                android:layout_marginBottom="16dp"
+                android:background="#FFFFFF"
+                android:elevation="6dp"
+                android:orientation="vertical"
+                android:padding="12dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/btnProfileDropdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="10dp"
+                    android:text="👤 View Profile"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/btnSettingsDropdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="10dp"
+                    android:text="⚙️ Settings"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EEEEEE"
+                    android:layout_marginVertical="4dp" />
+
+                <TextView
+                    android:id="@+id/btnDropdownLogout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="10dp"
+                    android:text="🚪 Logout"
+                    android:textColor="#FF6B6B"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- WELCOME CARD BANNER -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#E8F0FE"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/textWelcomeBanner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Welcome Back!"
+                        android:textColor="#1967D2"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Keep learning and reach your goals!"
+                        android:textColor="#5F6368"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- FEED CONTAINER FOR TEACHER POSTS -->
             <TextView
-                android:id="@+id/tvUserProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:paddingStart="16dp"
-                android:text="  👤 Student ▾"
-                android:textColor="#333333"
-                android:textStyle="bold" />
+                android:text="Recent Activities &amp; Announcements"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#202124"
+                android:layout_marginBottom="12dp" />
+
+            <LinearLayout
+                android:id="@+id/layoutStudentFeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Teacher posts (Lessons, Quizzes, Projects) load dynamically here -->
+            </LinearLayout>
+
         </LinearLayout>
+    </ScrollView>
 
-        <!-- Dropdown Menu Layout -->
-        <LinearLayout
-            android:id="@+id/layoutProfileDropdown"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:orientation="vertical"
-            android:background="#FFFFFF"
-            android:elevation="4dp"
-            android:padding="12dp"
-            android:visibility="gone"
-            android:layout_marginTop="-16dp"
-            android:layout_marginBottom="16dp">
-
-            <TextView
-                android:id="@+id/btnProfileDropdown"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="8dp"
-                android:text="👤 View Profile"
-                android:textColor="#333333"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="⚙️ Settings"
-                android:textColor="#333333"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/btnDropdownLogout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="8dp"
-                android:text="🚪 Logout"
-                android:textColor="#FF6B6B"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <!-- Welcome Banner -->
-        <TextView
-            android:id="@+id/tvWelcomeHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Welcome Back!"
-            android:textColor="#1B2A4A"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Keep learning and reach your goals!"
-            android:textColor="#666666"
-            android:layout_marginBottom="24dp"/>
-
-        <!-- Subject Progress Cards Row -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"/>
-
-    </LinearLayout>
 </LinearLayout>
